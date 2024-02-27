@@ -1,39 +1,25 @@
-import { ActionWithPayload } from "../../../shared/types/utility";
-import { GenderType } from "../../../shared/types/genderType";
-
-export type AnalysisFormPayload = {
-  age: number;
-  serumCreatinine: number;
-  serumSodium: number;
-  platelets: number;
-  ejectionFraction: number;
-  creatininePhosphokinase: number;
-  anaemia: boolean | undefined;
-  diabetes: boolean | undefined;
-  highBloodPressure: boolean | undefined;
-  smoking: boolean | undefined;
-  sex: GenderType | undefined;
-};
+import { ActionWithPayload } from "@/shared/types/utility";
+import { PatientInformation } from "@/shared/types/patientInformation";
 
 export type AnalysisFormState = {
-  form: AnalysisFormPayload;
+  form: PatientInformation;
   step: number;
   maxStep: number;
   setValue: (
-    key: keyof AnalysisFormPayload,
-    value: AnalysisFormPayload[keyof AnalysisFormPayload]
+    key: keyof PatientInformation,
+    value: PatientInformation[keyof PatientInformation]
   ) => void;
   setStep: (step: number) => void;
   handleSubmit: () => void;
 };
 
-type AnalysisFormPayloadKeys = keyof AnalysisFormPayload;
+type PatientInformationKeys = keyof PatientInformation;
 
 export type SetValueAction = ActionWithPayload<
   "SET_VALUE",
   {
-    key: AnalysisFormPayloadKeys;
-    value: AnalysisFormPayload[AnalysisFormPayloadKeys];
+    key: PatientInformationKeys;
+    value: PatientInformation[PatientInformationKeys];
   }
 >;
 export type SetStepAction = ActionWithPayload<"SET_STEP", number>;
