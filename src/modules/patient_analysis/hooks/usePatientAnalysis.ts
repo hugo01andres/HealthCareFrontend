@@ -4,10 +4,10 @@ import {
   AnalysisPredictionResponse,
   AnalysisPdfResponse,
 } from "@/modules/patient_analysis/types";
-import { useAnalysisFormContext } from "./useAnalysisFormContext";
+import { usePatientAnalysisContext } from "./usePatientAnalysisContext";
 
 export function usePatientAnalysisPrediction() {
-  const { form } = useAnalysisFormContext();
+  const { form } = usePatientAnalysisContext();
 
   const { mutate, mutateAsync, ...rest } =
     useMutation<AnalysisPredictionResponse>({
@@ -22,7 +22,7 @@ export function usePatientAnalysisPrediction() {
 }
 
 export function usePatientAnalysisPdf() {
-  const { form } = useAnalysisFormContext();
+  const { form } = usePatientAnalysisContext();
 
   const { mutate, mutateAsync, ...rest } = useMutation<AnalysisPdfResponse>({
     mutationFn: () => patientAnalysis.getAnalysisPdf(form),

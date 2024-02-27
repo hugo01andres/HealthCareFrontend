@@ -4,6 +4,7 @@ import { PatientInformation } from "@/shared/types/patientInformation";
 
 export default {
   async getAnalysisPrediction(patientInformation: PatientInformation) {
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     const { data } = await heartSafeApi.post<AnalysisPredictionResponse>(
       "/userinformation/analysisprediction",
       {

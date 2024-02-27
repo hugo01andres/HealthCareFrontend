@@ -1,7 +1,7 @@
 import { ActionWithPayload } from "@/shared/types/utility";
 import { PatientInformation } from "@/shared/types/patientInformation";
 
-export type AnalysisFormState = {
+export type PatientAnalysisState = {
   form: PatientInformation;
   step: number;
   maxStep: number;
@@ -24,4 +24,4 @@ export type SetValueAction = ActionWithPayload<
 >;
 export type SetStepAction = ActionWithPayload<"SET_STEP", number>;
 
-export type AnalysisFormActionTypes = SetValueAction | SetStepAction;
+export type PatientAnalysisActionTypes = SetValueAction | SetStepAction;

@@ -2,11 +2,11 @@ import { FormEvent } from "react";
 import Input from "@/shared/components/Input";
 import NumberInput from "@/shared/components/InputNumber";
 import BooleanSelect from "@/shared/components/BooleanSelect";
-import { useAnalysisFormContext } from "@/modules/patient_analysis/hooks/useAnalysisFormContext";
+import { usePatientAnalysisContext } from "@/modules/patient_analysis/hooks/usePatientAnalysisContext";
 import { genderTypes, GenderType } from "@/shared/types/genderType";
 
 export default function AnalysisFormGeneral() {
-  const { setValue, ...state } = useAnalysisFormContext();
+  const { setValue, ...state } = usePatientAnalysisContext();
 
   const { form } = state;
 

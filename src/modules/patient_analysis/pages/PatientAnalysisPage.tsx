@@ -1,12 +1,12 @@
-import { AnalysisForm } from "@modules/patient_analysis/components";
-import { AnalysisFormProvider } from "@modules/patient_analysis/contexts";
+import { AnalysisForm } from "@/modules/patient_analysis/components";
+import { PatientAnalysisContextProvider } from "@/modules/patient_analysis/contexts";
 
 export default function PatientAnalysisPage() {
   return (
     <div>
-      <AnalysisFormProvider>
+      <PatientAnalysisContextProvider>
         <AnalysisForm />
-      </AnalysisFormProvider>
+      </PatientAnalysisContextProvider>
     </div>
   );
 }

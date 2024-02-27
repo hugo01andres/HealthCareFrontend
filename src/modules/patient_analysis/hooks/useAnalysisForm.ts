@@ -1,11 +1,11 @@
 import {
-  AnalysisFormActionTypes,
-  AnalysisFormPayload,
-  AnalysisFormState,
-} from "@modules/patient_analysis/types/AnalysisFormState";
+  PatientAnalysisActionTypes,
+  PatientAnalysisState,
+} from "@/modules/patient_analysis/types/PatientAnalysisState";
+import { PatientInformation } from "@/shared/types/patientInformation";
 import { useReducer } from "react";
 
-const initialState: AnalysisFormState = {
+const initialState: PatientAnalysisState = {
   form: {
     age: 0,
     creatininePhosphokinase: 0,
@@ -13,10 +13,10 @@ const initialState: AnalysisFormState = {
     serumCreatinine: 0,
     serumSodium: 0,
     platelets: 0,
-    anaemia: undefined,
-    diabetes: undefined,
-    highBloodPressure: undefined,
-    smoking: undefined,
+    anaemia: false,
+    diabetes: false,
+    highBloodPressure: false,
+    smoking: false,
     sex: undefined,
   },
   step: 0,
@@ -26,7 +26,10 @@ const initialState: AnalysisFormState = {
   handleSubmit: () => {},
 };
 
-const reducer = (state: AnalysisFormState, action: AnalysisFormActionTypes) => {
+const reducer = (
+  state: PatientAnalysisState,
+  action: PatientAnalysisActionTypes
+) => {
   switch (action.type) {
     case "SET_VALUE":
       return {
@@ -49,8 +52,8 @@ export const useAnalysisForm = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const setValue = (
-    key: keyof AnalysisFormPayload,
-    value: AnalysisFormPayload[keyof AnalysisFormPayload]
+    key: keyof PatientInformation,
+    value: PatientInformation[keyof PatientInformation]
   ) => {
     dispatch({ type: "SET_VALUE", payload: { key, value } });
   };
