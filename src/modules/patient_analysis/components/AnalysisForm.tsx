@@ -3,16 +3,16 @@ import {
   AnalysisFormBiochemical,
   AnalysisFormGeneral,
   AnalysisFormStepper,
-} from "@modules/patient_analysis/components";
+} from "@/modules/patient_analysis/components";
 import Button from "@shared/components/Button";
-import { useAnalysisFormContext } from "@/modules/patient_analysis/hooks/useAnalysisFormContext";
+import { usePatientAnalysisContext } from "../hooks/usePatientAnalysisContext";
 
 export default function AnalysisForm() {
-  const { handleSubmit: submit } = useAnalysisFormContext();
+  const { getPatientAnalysisPdf } = usePatientAnalysisContext();
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    submit();
+    getPatientAnalysisPdf();
   }
 
   return (
