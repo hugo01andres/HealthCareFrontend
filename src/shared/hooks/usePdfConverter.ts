@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export const usePdfConvert = (pdfBytes: string): string | null => {
+export const usePdfConvert = (pdfBytes?: string): string | null => {
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
 
   useEffect(() => {
@@ -8,8 +8,16 @@ export const usePdfConvert = (pdfBytes: string): string | null => {
       const arrayBuffer = Uint8Array.from(atob(pdfBytes), (c) =>
         c.charCodeAt(0)
       ).buffer;
-      const blob = new Blob([arrayBuffer], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
+
+      const blob = new Blob([arrayBuffer], {
+        type: "application/pdf",
+      });
+
+      const file = new File([blob], "analysis.pdf", {
+        type: "application/pdf",
+      });
+
+      const url = URL.createObjectURL(file);
       setPdfUrl(url);
       return () => URL.revokeObjectURL(url);
     } else {
