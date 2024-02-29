@@ -5,7 +5,7 @@ import AnalysisResults from "../components/AnalysisResults";
 export default function PatientAnalysisPage() {
   return (
     <PatientAnalysisContextProvider>
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
         <AnalysisForm />
 
         <AnalysisResults />
