@@ -8,7 +8,7 @@ import Button from "@shared/components/Button";
 import { usePatientAnalysisContext } from "../hooks/usePatientAnalysisContext";
 
 export default function AnalysisForm() {
-  const { getPatientAnalysisPdf } = usePatientAnalysisContext();
+  const { getPatientAnalysisPdf, isLoading } = usePatientAnalysisContext();
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -17,14 +17,20 @@ export default function AnalysisForm() {
 
   return (
     <div>
-      <Form onSubmit={handleSubmit} className="max-w-lg gap-4">
+      <Form
+        onSubmit={handleSubmit}
+        className={`max-w-lg gap-4 ${isLoading ? "opacity-70" : ""}`}
+      >
         <h1 className="text-lg font-semibold">Formulario de análisis</h1>
 
         <AnalysisFormGeneral />
         <AnalysisFormBiochemical />
 
         <AnalysisFormStepper />
-        <Button type="submit">Submit</Button>
+
+        <Button isLoading={isLoading} disabled={isLoading} type="submit">
+          Submit
+        </Button>
       </Form>
     </div>
   );
