@@ -27,7 +27,7 @@ export default function AnalysisFormStepper() {
         disabled={!restrictions.canPrevStep}
       >
         {" "}
-        &larr; Back
+        &larr; Anterior
       </Button>
 
       <Button
@@ -37,7 +37,7 @@ export default function AnalysisFormStepper() {
         disabled={!restrictions.canNextStep}
       >
         {" "}
-        Next &rarr;
+        Siguiente &rarr;
       </Button>
     </nav>
   );

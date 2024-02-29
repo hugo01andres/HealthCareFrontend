@@ -31,14 +31,14 @@ export default function AnalysisResults() {
           className="w-full bg-blue-300 text-blue-900 border-2 border-blue-800"
           onClick={viewAnalysisPdf}
         >
-          View PDF
+          Ver PDF
         </Button>
 
         <Button
           className="w-full bg-blue-300 text-blue-900 border-2 border-blue-800"
           onClick={downloadAnalysisPdf}
         >
-          Download PDF
+          Descargar PDF
         </Button>
       </div>
     )

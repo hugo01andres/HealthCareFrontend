@@ -29,7 +29,7 @@ export default function AnalysisForm() {
         <AnalysisFormStepper />
 
         <Button isLoading={isLoading} disabled={isLoading} type="submit">
-          Submit
+          Envíar
         </Button>
       </Form>
     </div>
