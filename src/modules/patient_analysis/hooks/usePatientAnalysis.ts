@@ -26,7 +26,8 @@ const initialState: PatientAnalysisState = {
   form: formInitialState,
   step: 0,
   maxStep: 1,
-  pdfUrl: null,
+  pdfUrl: undefined,
+  pdfBytes: undefined,
   setValue: () => {},
   setStep: () => {},
   getPatientAnalysisPdf: async () => {},
@@ -53,18 +54,19 @@ const reducer = (
         ...state,
         step: action.payload,
       };
+
     case "analysisPdf/loaded":
       return {
         ...state,
         isLoading: false,
-        pdfUrl: action.payload,
+        pdfBytes: action.payload,
       };
     default:
       return state;
   }
 };
 
-export const useAnalysisForm = () => {
+export const usePatientAnalysis = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const setValue = (
@@ -79,9 +81,16 @@ export const useAnalysisForm = () => {
   };
 
   const getPatientAnalysisPdf = async () => {
-    const { data } = await patientAnalysisServices.getAnalysisPdf(state.form);
-
-    console.log(data);
+    dispatch({ type: "loading" });
+    try {
+      const { data } = await patientAnalysisServices.getAnalysisPdf(state.form);
+      dispatch({ type: "analysisPdf/loaded", payload: data.pdf });
+    } catch {
+      dispatch({
+        type: "error",
+        payload: "Error getting patient analysis. Try again later",
+      });
+    }
   };
 
   return { ...state, setValue, setStep, getPatientAnalysisPdf };

@@ -26,12 +26,8 @@ export default function Button({
         }
       )}
     >
-      {isLoading && (
-        <span className="material-symbols-outlined animate-spin">
-          progress_activity
-        </span>
-      )}
       {children}
+      {isLoading && <div className="loading-spinner"></div>}
     </button>
   );
 }

@@ -7,7 +7,8 @@ export type PatientAnalysisState = {
   maxStep: number;
   isLoading: boolean;
   error: string | null;
-  pdfUrl: string | null;
+  pdfUrl: string | undefined;
+  pdfBytes: string | undefined;
   setValue: (
     key: keyof PatientInformation,
     value: PatientInformation[keyof PatientInformation]
@@ -18,7 +19,7 @@ export type PatientAnalysisState = {
 
 type PatientInformationKeys = keyof PatientInformation;
 
-export type LoadingAction = ActionWithPayload<"loading", void>;
+export type LoadingAction = { type: "loading" };
 export type ErrorAction = ActionWithPayload<"error", string>;
 export type SetValueAction = ActionWithPayload<
   "form/setValue",
