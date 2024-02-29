@@ -3,7 +3,6 @@ import Input from "@/shared/components/Input";
 import NumberInput from "@/shared/components/InputNumber";
 import BooleanSelect from "@/shared/components/BooleanSelect";
 import { usePatientAnalysisContext } from "@/modules/patient_analysis/hooks/usePatientAnalysisContext";
-import { genderTypes, GenderType } from "@/shared/types/genderType";
 
 export default function AnalysisFormGeneral() {
   const { setValue, ...state } = usePatientAnalysisContext();
@@ -25,15 +24,14 @@ export default function AnalysisFormGeneral() {
           <select
             value={form.sex ?? "undefined"}
             onChange={(e: FormEvent<HTMLSelectElement>) => {
-              setValue("sex", e.currentTarget.value as GenderType);
+              setValue("sex", Number(e.currentTarget.value));
             }}
           >
             <option value={"undefined"} disabled>
               Seleccione una opción
             </option>
-            <option value={genderTypes.MALE}>Masculino</option>
-            <option value={genderTypes.FEMALE}>Femenino</option>
-            <option value={genderTypes.OTHER}>Prefiero no decirlo</option>
+            <option value={1}>Masculino</option>
+            <option value={0}>Femenino</option>
           </select>
         </Input>
 

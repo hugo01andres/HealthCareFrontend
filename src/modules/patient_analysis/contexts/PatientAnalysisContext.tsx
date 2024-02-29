@@ -1,6 +1,6 @@
+import { createContext } from "react";
 import { useAnalysisForm } from "@/modules/patient_analysis/hooks/useAnalysisForm";
 import { PatientAnalysisState } from "@/modules/patient_analysis/types/PatientAnalysisState";
-import { createContext } from "react";
 
 export type PatientAnalysisProviderProps = {
   children: React.ReactNode;
@@ -12,7 +12,7 @@ export const PatientAnalysisContext =
 export function PatientAnalysisContextProvider({
   children,
 }: PatientAnalysisProviderProps) {
-  const state = useAnalysisForm();
+  const { ...state } = useAnalysisForm();
 
   return (
     <PatientAnalysisContext.Provider value={{ ...state }}>

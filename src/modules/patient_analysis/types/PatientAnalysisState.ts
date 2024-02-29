@@ -5,23 +5,37 @@ export type PatientAnalysisState = {
   form: PatientInformation;
   step: number;
   maxStep: number;
+  isLoading: boolean;
+  error: string | null;
+  pdfUrl: string | null;
   setValue: (
     key: keyof PatientInformation,
     value: PatientInformation[keyof PatientInformation]
   ) => void;
   setStep: (step: number) => void;
-  handleSubmit: () => void;
+  getPatientAnalysisPdf: () => Promise<void>;
 };
 
 type PatientInformationKeys = keyof PatientInformation;
 
+export type LoadingAction = ActionWithPayload<"loading", void>;
+export type ErrorAction = ActionWithPayload<"error", string>;
 export type SetValueAction = ActionWithPayload<
-  "SET_VALUE",
+  "form/setValue",
   {
     key: PatientInformationKeys;
     value: PatientInformation[PatientInformationKeys];
   }
 >;
-export type SetStepAction = ActionWithPayload<"SET_STEP", number>;
+export type SetStepAction = ActionWithPayload<"step/setStep", number>;
+export type AnalysisPdfLoadedAction = ActionWithPayload<
+  "analysisPdf/loaded",
+  string
+>;
 
-export type PatientAnalysisActionTypes = SetValueAction | SetStepAction;
+export type PatientAnalysisActionTypes =
+  | LoadingAction
+  | ErrorAction
+  | SetValueAction
+  | SetStepAction
+  | AnalysisPdfLoadedAction;
