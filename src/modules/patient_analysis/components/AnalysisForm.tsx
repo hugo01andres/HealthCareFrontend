@@ -1,37 +1,54 @@
-import Form from "@/shared/components/Form";
 import {
   AnalysisFormBiochemical,
   AnalysisFormGeneral,
-  AnalysisFormStepper,
 } from "@/modules/patient_analysis/components";
 import Button from "@shared/components/Button";
 import { usePatientAnalysisContext } from "../hooks/usePatientAnalysisContext";
 
 export default function AnalysisForm() {
-  const { getPatientAnalysisPdf, isLoading } = usePatientAnalysisContext();
+  const { loading, currentStep, canFetchPdf, getAnalysisPdf } =
+    usePatientAnalysisContext();
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    getPatientAnalysisPdf();
+  function handleSubmit() {
+    getAnalysisPdf();
   }
+
+  const formSubtitle =
+    currentStep === "general" ? "Sección general" : "Sección bioquímica";
 
   return (
     <div>
-      <Form
-        onSubmit={handleSubmit}
-        className={`max-w-lg gap-4 ${isLoading ? "opacity-70" : ""}`}
+      <div
+        className={`flex flex-col border rounded-md mx-auto p-6 max-w-lg gap-4 ${
+          loading ? "opacity-70" : ""
+        }`}
       >
-        <h1 className="text-lg font-semibold">Formulario de análisis</h1>
+        <div className="flex flex-wrap gap-2 items-center justify-between">
+          <h2 className="text-xl font-semibold">Formulario de análisis</h2>
+          <h3 className="p-1 px-1.5 border border-gray-600 rounded-md text-sm">
+            {formSubtitle}
+          </h3>
+        </div>
 
-        <AnalysisFormGeneral />
-        <AnalysisFormBiochemical />
+        {currentStep === "general" ? (
+          <AnalysisFormGeneral />
+        ) : (
+          <AnalysisFormBiochemical />
+        )}
 
-        <AnalysisFormStepper />
+        {/* <AnalysisFormStepper /> */}
 
-        <Button isLoading={isLoading} disabled={isLoading} type="submit">
-          Envíar
-        </Button>
-      </Form>
+        {currentStep === "biochemical" && canFetchPdf && (
+          <Button
+            onClick={handleSubmit}
+            isLoading={loading}
+            disabled={loading}
+            type="submit"
+          >
+            Envíar
+          </Button>
+        )}
+      </div>
     </div>
   );
 }

@@ -25,7 +25,7 @@ export default function Input({
         })}
       </label>
 
-      {error && <p>{error}</p>}
+      {error && <p className="text-xs text-red-500">{error}</p>}
     </div>
   );
 }
