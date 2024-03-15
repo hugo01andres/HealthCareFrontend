@@ -3,6 +3,7 @@ import NumberInput from "@/shared/components/NumberInput";
 import { usePatientBiochemicalForm } from "../hooks/usePatientBiochemicalForm";
 import { usePatientAnalysisContext } from "../hooks/usePatientAnalysisContext";
 import AnalysisFormStepper from "./AnalysisFormStepper";
+import { motion } from "framer-motion";
 
 export default function AnalysisFormBiochemical() {
   const {
@@ -18,7 +19,11 @@ export default function AnalysisFormBiochemical() {
   });
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      className="flex flex-col gap-4"
+    >
       <Input
         label="Creatinina fosfoquinasa"
         error={errors.creatininePhosphokinase?.message}
@@ -67,6 +72,6 @@ export default function AnalysisFormBiochemical() {
         onPrevious={() => setStep("general")}
         onNext={onHandleSubmit}
       />
-    </>
+    </motion.div>
   );
 }
