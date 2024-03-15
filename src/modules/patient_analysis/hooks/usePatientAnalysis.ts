@@ -58,7 +58,7 @@ export const usePatientAnalysis = () => {
     dispatch({ type: "form/setGeneralForm", payload: form });
   };
 
-  const setBiochemicalForm = (form: PatientBiochemicalForm) => {
+  const setBiochemicalForm = (form: PatientBiochemicalForm | undefined) => {
     dispatch({ type: "form/setBiochemicalForm", payload: form });
   };
 
@@ -69,6 +69,8 @@ export const usePatientAnalysis = () => {
   const getAnalysisPdf = async () => {
     const { general, biochemical } = state.forms;
     if (!general || !biochemical) return;
+
+    console.log(biochemical);
 
     dispatch({ type: "loading", payload: true });
 

@@ -15,7 +15,7 @@ export type PatientAnalysisContext = {
   canFetchPdf: boolean;
   setStep: (step: FormSteps) => void;
   setGeneralForm: (form: PatientGeneralForm) => void;
-  setBiochemicalForm: (form: PatientBiochemicalForm) => void;
+  setBiochemicalForm: (form: PatientBiochemicalForm | undefined) => void;
   getAnalysisPdf: () => void;
 };
 
@@ -26,7 +26,7 @@ export type SetGeneralFormAction = {
 };
 export type SetBiochemicalFormAction = {
   type: "form/setBiochemicalForm";
-  payload: PatientBiochemicalForm;
+  payload: PatientBiochemicalForm | undefined;
 };
 export type SetPdfUrlAction = { type: "pdf/setPdfUrl"; payload: string };
 export type SetPdfBytesAction = { type: "pdf/setPdfBytes"; payload: string };

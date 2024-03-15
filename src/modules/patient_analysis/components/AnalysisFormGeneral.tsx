@@ -4,6 +4,7 @@ import BooleanSelect from "@/shared/components/BooleanSelect";
 import { usePatientGeneralForm } from "../hooks/usePatientGeneralForm";
 import { usePatientAnalysisContext } from "../hooks/usePatientAnalysisContext";
 import AnalysisFormStepper from "./AnalysisFormStepper";
+import { motion } from "framer-motion";
 
 export default function AnalysisFormGeneral() {
   const {
@@ -20,7 +21,11 @@ export default function AnalysisFormGeneral() {
   });
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      className="flex flex-col gap-4"
+    >
       <Input label="Edad" error={errors.age?.message}>
         <NumberInput placeholder="Su edad" {...register("age")} />
       </Input>
@@ -55,6 +60,6 @@ export default function AnalysisFormGeneral() {
       </Input>
 
       <AnalysisFormStepper onNext={onHandleSubmit} />
-    </>
+    </motion.div>
   );
 }

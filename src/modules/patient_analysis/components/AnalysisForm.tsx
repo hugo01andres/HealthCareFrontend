@@ -3,7 +3,8 @@ import {
   AnalysisFormGeneral,
 } from "@/modules/patient_analysis/components";
 import Button from "@shared/components/Button";
-import { usePatientAnalysisContext } from "../hooks/usePatientAnalysisContext";
+import { usePatientAnalysisContext } from "@/modules/patient_analysis/hooks/usePatientAnalysisContext";
+import { motion } from "framer-motion";
 
 export default function AnalysisForm() {
   const { loading, currentStep, canFetchPdf, getAnalysisPdf } =
@@ -17,7 +18,7 @@ export default function AnalysisForm() {
     currentStep === "general" ? "Sección general" : "Sección bioquímica";
 
   return (
-    <div>
+    <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}>
       <div
         className={`flex flex-col border rounded-md mx-auto p-6 max-w-lg gap-4 ${
           loading ? "opacity-70" : ""
@@ -36,19 +37,23 @@ export default function AnalysisForm() {
           <AnalysisFormBiochemical />
         )}
 
-        {/* <AnalysisFormStepper /> */}
-
         {currentStep === "biochemical" && canFetchPdf && (
-          <Button
-            onClick={handleSubmit}
-            isLoading={loading}
-            disabled={loading}
-            type="submit"
+          <motion.div
+            initial={{ opacity: 0, x: -100 }}
+            whileInView={{ opacity: 1, x: 0 }}
           >
-            Envíar
-          </Button>
+            <Button
+              onClick={handleSubmit}
+              isLoading={loading}
+              disabled={loading}
+              type="submit"
+              className="w-full"
+            >
+              Envíar
+            </Button>
+          </motion.div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }
