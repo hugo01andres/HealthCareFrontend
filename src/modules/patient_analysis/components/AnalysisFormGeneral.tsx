@@ -1,68 +1,60 @@
-import { FormEvent } from "react";
 import Input from "@/shared/components/Input";
-import NumberInput from "@/shared/components/InputNumber";
+import NumberInput from "@/shared/components/NumberInput";
 import BooleanSelect from "@/shared/components/BooleanSelect";
-import { usePatientAnalysisContext } from "@/modules/patient_analysis/hooks/usePatientAnalysisContext";
+import { usePatientGeneralForm } from "../hooks/usePatientGeneralForm";
+import { usePatientAnalysisContext } from "../hooks/usePatientAnalysisContext";
+import AnalysisFormStepper from "./AnalysisFormStepper";
 
 export default function AnalysisFormGeneral() {
-  const { setValue, ...state } = usePatientAnalysisContext();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = usePatientGeneralForm();
 
-  const { form } = state;
+  const { setGeneralForm, setStep } = usePatientAnalysisContext();
+
+  const onHandleSubmit = handleSubmit((data) => {
+    setGeneralForm(data);
+    setStep("biochemical");
+  });
 
   return (
-    state.step === 0 && (
-      <>
-        <Input label="Edad">
-          <NumberInput
-            placeholder="Su edad"
-            value={form.age}
-            onChange={(value) => setValue("age", value)}
-          />
-        </Input>
+    <>
+      <Input label="Edad" error={errors.age?.message}>
+        <NumberInput placeholder="Su edad" {...register("age")} />
+      </Input>
 
-        <Input label="Sexo">
-          <select
-            value={form.sex ?? "undefined"}
-            onChange={(e: FormEvent<HTMLSelectElement>) => {
-              setValue("sex", Number(e.currentTarget.value));
-            }}
-          >
-            <option value={"undefined"} disabled>
-              Seleccione una opción
-            </option>
-            <option value={1}>Masculino</option>
-            <option value={0}>Femenino</option>
-          </select>
-        </Input>
+      <Input label="Sexo" error={errors.sex?.message}>
+        <select {...register("sex")} defaultValue={-1}>
+          <option value={-1} disabled>
+            Seleccione una opción
+          </option>
+          <option value={1}>Masculino</option>
+          <option value={0}>Femenino</option>
+        </select>
+      </Input>
 
-        <Input label="¿Es fumador?">
-          <BooleanSelect
-            value={form.smoking}
-            onChange={(value) => setValue("smoking", value)}
-          />
-        </Input>
+      <Input label="¿Es fumador?" error={errors.smoking?.message}>
+        <BooleanSelect {...register("smoking")} />
+      </Input>
 
-        <Input label="¿Padece de anemia?">
-          <BooleanSelect
-            value={form.anaemia}
-            onChange={(value) => setValue("anaemia", value)}
-          />
-        </Input>
+      <Input label="¿Padece de anemia?" error={errors.anaemia?.message}>
+        <BooleanSelect {...register("anaemia")} />
+      </Input>
 
-        <Input label="¿Padece de diabetes?">
-          <BooleanSelect
-            value={form.diabetes}
-            onChange={(value) => setValue("diabetes", value)}
-          />
-        </Input>
+      <Input label="¿Padece de diabetes?" error={errors.diabetes?.message}>
+        <BooleanSelect {...register("diabetes")} />
+      </Input>
 
-        <Input label="¿Padece de hipertensión arterial?">
-          <BooleanSelect
-            value={form.highBloodPressure}
-            onChange={(value) => setValue("highBloodPressure", value)}
-          />
-        </Input>
-      </>
-    )
+      <Input
+        label="¿Padece de hipertensión arterial?"
+        error={errors.highBloodPressure?.message}
+      >
+        <BooleanSelect {...register("highBloodPressure")} />
+      </Input>
+
+      <AnalysisFormStepper onNext={onHandleSubmit} />
+    </>
   );
 }

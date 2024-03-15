@@ -1,6 +1,6 @@
 export type PatientInformation = {
   age: number;
-  sex: number | undefined;
+  sex: number;
   serumCreatinine: number;
   serumSodium: number;
   platelets: number;

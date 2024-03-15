@@ -3,7 +3,7 @@ import { usePatientAnalysisContext } from "../hooks/usePatientAnalysisContext";
 import Button from "@/shared/components/Button";
 
 export default function AnalysisResults() {
-  const { pdfBytes, isLoading } = usePatientAnalysisContext();
+  const { pdfBytes, loading } = usePatientAnalysisContext();
   const pdfUrl = usePdfConvert(pdfBytes);
 
   function viewAnalysisPdf() {
@@ -25,7 +25,7 @@ export default function AnalysisResults() {
 
   return (
     pdfUrl &&
-    !isLoading && (
+    !loading && (
       <div className="flex items-center justify-center gap-4 w-full max-w-lg p-4 mx-auto">
         <Button
           className="w-full bg-blue-300 text-blue-900 border-2 border-blue-800"

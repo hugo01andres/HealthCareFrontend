@@ -1,66 +1,51 @@
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
+import { PatientBiochemicalForm } from "./usePatientBiochemicalForm";
+import { PatientGeneralForm } from "./usePatientGeneralForm";
 import {
-  PatientAnalysisActionTypes,
-  PatientAnalysisState,
-} from "@/modules/patient_analysis/types/PatientAnalysisState";
-import { PatientInformation } from "@/shared/types/patientInformation";
-import { default as patientAnalysisServices } from "@modules/patient_analysis/services/patientAnalysis";
+  FormSteps,
+  PatientAnalysisAction,
+  PatientAnalysisContext,
+} from "../types/PatientAnalysis";
+import { PatientAnalysisService } from "@/modules/patient_analysis/services";
 
-const formInitialState: PatientInformation = {
-  age: 0,
-  creatininePhosphokinase: 0,
-  ejectionFraction: 0,
-  serumCreatinine: 0,
-  serumSodium: 0,
-  platelets: 0,
-  anaemia: false,
-  diabetes: false,
-  highBloodPressure: false,
-  smoking: false,
-  sex: undefined,
-};
-
-const initialState: PatientAnalysisState = {
-  isLoading: false,
-  error: null,
-  form: formInitialState,
-  step: 0,
-  maxStep: 1,
+const initialState: PatientAnalysisContext = {
+  loading: false,
+  forms: {
+    general: undefined,
+    biochemical: undefined,
+  },
+  currentStep: "general",
+  canFetchPdf: false,
   pdfUrl: undefined,
   pdfBytes: undefined,
-  setValue: () => {},
   setStep: () => {},
-  getPatientAnalysisPdf: async () => {},
+  setGeneralForm: () => {},
+  setBiochemicalForm: () => {},
+  getAnalysisPdf: () => {},
 };
 
 const reducer = (
-  state: PatientAnalysisState,
-  action: PatientAnalysisActionTypes
+  state: PatientAnalysisContext,
+  action: PatientAnalysisAction
 ) => {
   switch (action.type) {
     case "loading":
-      return { ...state, isLoading: true, error: null };
-    case "error":
-      return { ...state, isLoading: false, error: action.payload };
-    case "form/setValue":
+      return { ...state, loading: action.payload };
+    case "form/setGeneralForm":
+      return { ...state, forms: { ...state.forms, general: action.payload } };
+    case "form/setBiochemicalForm":
       return {
         ...state,
-        form: { ...state.form, [action.payload.key]: action.payload.value },
+        forms: { ...state.forms, biochemical: action.payload },
       };
+    case "pdf/setCanFetchPdf":
+      return { ...state, canFetchPdf: action.payload };
+    case "pdf/setPdfUrl":
+      return { ...state, pdfUrl: action.payload };
+    case "pdf/setPdfBytes":
+      return { ...state, pdfBytes: action.payload };
     case "step/setStep":
-      if (action.payload < 0 || action.payload > state.maxStep) return state;
-
-      return {
-        ...state,
-        step: action.payload,
-      };
-
-    case "analysisPdf/loaded":
-      return {
-        ...state,
-        isLoading: false,
-        pdfBytes: action.payload,
-      };
+      return { ...state, currentStep: action.payload };
     default:
       return state;
   }
@@ -69,29 +54,50 @@ const reducer = (
 export const usePatientAnalysis = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const setValue = (
-    key: keyof PatientInformation,
-    value: PatientInformation[keyof PatientInformation]
-  ) => {
-    dispatch({ type: "form/setValue", payload: { key, value } });
+  const setGeneralForm = (form: PatientGeneralForm) => {
+    dispatch({ type: "form/setGeneralForm", payload: form });
   };
 
-  const setStep = (step: number) => {
+  const setBiochemicalForm = (form: PatientBiochemicalForm) => {
+    dispatch({ type: "form/setBiochemicalForm", payload: form });
+  };
+
+  const setStep = (step: FormSteps) => {
     dispatch({ type: "step/setStep", payload: step });
   };
 
-  const getPatientAnalysisPdf = async () => {
-    dispatch({ type: "loading" });
+  const getAnalysisPdf = async () => {
+    const { general, biochemical } = state.forms;
+    if (!general || !biochemical) return;
+
+    dispatch({ type: "loading", payload: true });
+
     try {
-      const { data } = await patientAnalysisServices.getAnalysisPdf(state.form);
-      dispatch({ type: "analysisPdf/loaded", payload: data.pdf });
-    } catch {
-      dispatch({
-        type: "error",
-        payload: "Error getting patient analysis. Try again later",
-      });
+      const payload = { ...general, ...biochemical };
+      const { data } = await PatientAnalysisService.getAnalysisPdf(payload);
+
+      dispatch({ type: "pdf/setPdfBytes", payload: data.pdf });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      dispatch({ type: "loading", payload: false });
     }
   };
 
-  return { ...state, setValue, setStep, getPatientAnalysisPdf };
+  useEffect(() => {
+    const { general, biochemical } = state.forms;
+
+    dispatch({
+      type: "pdf/setCanFetchPdf",
+      payload: Boolean(general && biochemical),
+    });
+  }, [state.forms]);
+
+  return {
+    ...state,
+    setStep,
+    setGeneralForm,
+    setBiochemicalForm,
+    getAnalysisPdf,
+  };
 };

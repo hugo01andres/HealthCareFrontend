@@ -1,63 +1,72 @@
 import Input from "@/shared/components/Input";
-import NumberInput from "@/shared/components/InputNumber";
+import NumberInput from "@/shared/components/NumberInput";
+import { usePatientBiochemicalForm } from "../hooks/usePatientBiochemicalForm";
 import { usePatientAnalysisContext } from "../hooks/usePatientAnalysisContext";
+import AnalysisFormStepper from "./AnalysisFormStepper";
 
 export default function AnalysisFormBiochemical() {
-  const { setValue, ...state } = usePatientAnalysisContext();
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = usePatientBiochemicalForm();
 
-  const { form } = state;
+  const { setBiochemicalForm, setStep } = usePatientAnalysisContext();
+
+  const onHandleSubmit = handleSubmit((data) => {
+    setBiochemicalForm(data);
+  });
 
   return (
-    state.step === 1 && (
-      <>
-        <Input label="Creatinina fosfoquinasa">
-          <NumberInput
-            placeholder="Su nivel de creatinina fosfoquinasa"
-            value={form.creatininePhosphokinase}
-            onChange={(value) => setValue("creatininePhosphokinase", value)}
-          />
-        </Input>
+    <>
+      <Input
+        label="Creatinina fosfoquinasa"
+        error={errors.creatininePhosphokinase?.message}
+      >
+        <NumberInput
+          placeholder="Su nivel de creatinina fosfoquinasa"
+          {...register("creatininePhosphokinase")}
+        />
+      </Input>
 
-        <Input label="Fracción de eyección">
-          <NumberInput
-            placeholder="Su fracción de eyección"
-            value={form.ejectionFraction}
-            onChange={(value) => setValue("ejectionFraction", value)}
-          />
-        </Input>
+      <Input
+        label="Fracción de eyección"
+        error={errors.ejectionFraction?.message}
+      >
+        <NumberInput
+          placeholder="Su fracción de eyección"
+          {...register("ejectionFraction")}
+        />
+      </Input>
 
-        <Input label="Nivel de plaquetas">
-          <NumberInput
-            placeholder="Su nivel de plaquetas"
-            value={form.platelets}
-            onChange={(value) => setValue("platelets", value)}
-          />
-        </Input>
+      <Input label="Nivel de plaquetas" error={errors.platelets?.message}>
+        <NumberInput
+          placeholder="Su nivel de plaquetas"
+          {...register("platelets")}
+        />
+      </Input>
 
-        <Input label="Nivel de creatinina sérica">
-          <NumberInput
-            placeholder="Su nivel de creatinina sérica"
-            value={form.serumCreatinine}
-            onChange={(value) => setValue("serumCreatinine", value)}
-          />
-        </Input>
+      <Input
+        label="Nivel de creatinina sérica"
+        error={errors.serumCreatinine?.message}
+      >
+        <NumberInput
+          placeholder="Su nivel de creatinina sérica"
+          {...register("serumCreatinine")}
+        />
+      </Input>
 
-        <Input label="Nivel de sodio">
-          <NumberInput
-            placeholder="Su nivel de sodio"
-            value={form.serumSodium}
-            onChange={(value) => setValue("serumSodium", value)}
-          />
-        </Input>
+      <Input label="Nivel de sodio" error={errors.serumSodium?.message}>
+        <NumberInput
+          placeholder="Su nivel de sodio"
+          {...register("serumSodium")}
+        />
+      </Input>
 
-        <Input label="Nivel de sodio">
-          <NumberInput
-            placeholder="Su nivel de sodio"
-            value={form.serumSodium}
-            onChange={(value) => setValue("serumSodium", value)}
-          />
-        </Input>
-      </>
-    )
+      <AnalysisFormStepper
+        onPrevious={() => setStep("general")}
+        onNext={onHandleSubmit}
+      />
+    </>
   );
 }

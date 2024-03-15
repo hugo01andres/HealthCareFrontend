@@ -1,30 +1,28 @@
 import Button from "@/shared/components/Button";
 import { usePatientAnalysisContext } from "@/modules/patient_analysis/hooks/usePatientAnalysisContext";
 
-export default function AnalysisFormStepper() {
-  const { setStep, ...state } = usePatientAnalysisContext();
-  const { step, maxStep } = state;
+type AnalysisFormStepperProps = {
+  onPrevious?: () => void;
+  onNext?: () => void;
+};
 
-  function nextStep() {
-    setStep(step + 1);
-  }
+export default function AnalysisFormStepper({
+  onPrevious,
+  onNext,
+}: AnalysisFormStepperProps) {
+  const { currentStep } = usePatientAnalysisContext();
 
-  function prevStep() {
-    setStep(step - 1);
-  }
-
-  const restrictions = {
-    canPrevStep: step > 0,
-    canNextStep: step < maxStep,
-  };
+  const nextLabel = currentStep === "general" ? "Siguiente" : "Finalizar";
 
   return (
     <nav className="flex items-center justify-between">
       <Button
         type="button"
-        className={"border border-blue-500 bg-transparent text-blue-500"}
-        onClick={prevStep}
-        disabled={!restrictions.canPrevStep}
+        className={`border border-blue-500 bg-transparent text-blue-500 ${
+          currentStep === "general" && "invisible"
+        }`}
+        onClick={onPrevious}
+        disabled={currentStep === "general"}
       >
         {" "}
         &larr; Anterior
@@ -33,11 +31,10 @@ export default function AnalysisFormStepper() {
       <Button
         type="button"
         className="border border-blue-500 bg-transparent text-blue-500"
-        onClick={nextStep}
-        disabled={!restrictions.canNextStep}
+        onClick={onNext && onNext}
       >
         {" "}
-        Siguiente &rarr;
+        {nextLabel} &rarr;
       </Button>
     </nav>
   );
