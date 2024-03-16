@@ -15,7 +15,7 @@ export default function AnalysisForm() {
   return (
     <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}>
       <div
-        className={`flex flex-col border rounded-md mx-auto p-6 max-w-lg gap-4 ${
+        className={`flex flex-col border shadow-md rounded-md mx-auto p-6 max-w-lg gap-4 ${
           loading ? "opacity-70" : ""
         }`}
       >
