@@ -3,19 +3,30 @@ import { PatientGeneralForm } from "../hooks/usePatientGeneralForm";
 
 export type FormSteps = "general" | "biochemical";
 
+export type PatientExtraDataForm = {
+  heartProblemsRecently: boolean;
+  shareData: boolean;
+};
+
+export type PatientExtraDataKeys = keyof PatientExtraDataForm;
+
 export type PatientAnalysisContext = {
   loading: boolean;
   forms: {
     general: PatientGeneralForm | undefined;
     biochemical: PatientBiochemicalForm | undefined;
+    extra: PatientExtraDataForm;
   };
   pdfUrl: string | undefined;
   pdfBytes: string | undefined;
   currentStep: FormSteps;
   canFetchPdf: boolean;
+  isModalOpen: boolean;
+  setIsModalOpen: (isOpen: boolean) => void;
   setStep: (step: FormSteps) => void;
   setGeneralForm: (form: PatientGeneralForm) => void;
   setBiochemicalForm: (form: PatientBiochemicalForm | undefined) => void;
+  setExtraDataForm: (key: PatientExtraDataKeys, value: boolean) => void;
   getAnalysisPdf: () => void;
 };
 
@@ -38,6 +49,13 @@ export type SetCanFetchPdfAction = {
   type: "pdf/setCanFetchPdf";
   payload: boolean;
 };
+export type SetExtraDataFormAction = {
+  type: "form/setExtraDataForm";
+  payload: {
+    key: PatientExtraDataKeys;
+    value: boolean;
+  };
+};
 
 export type PatientAnalysisAction =
   | LoadingAction
@@ -46,4 +64,5 @@ export type PatientAnalysisAction =
   | SetCanFetchPdfAction
   | SetPdfUrlAction
   | SetPdfBytesAction
-  | SetStepAction;
+  | SetStepAction
+  | SetExtraDataFormAction;

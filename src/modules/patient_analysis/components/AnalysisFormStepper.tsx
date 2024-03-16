@@ -18,7 +18,7 @@ export default function AnalysisFormStepper({
     <nav className="flex items-center justify-between">
       <Button
         type="button"
-        className={`border border-blue-500 bg-transparent text-blue-500 ${
+        className={`border-2 border-black bg-transparent text-black ${
           currentStep === "general" && "invisible"
         }`}
         onClick={onPrevious}
@@ -30,7 +30,7 @@ export default function AnalysisFormStepper({
 
       <Button
         type="button"
-        className="border border-blue-500 bg-transparent text-blue-500"
+        className="border-2 border-black bg-transparent text-black"
         onClick={onNext && onNext}
       >
         {" "}

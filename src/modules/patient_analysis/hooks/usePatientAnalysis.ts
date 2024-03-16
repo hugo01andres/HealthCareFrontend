@@ -1,10 +1,11 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { PatientBiochemicalForm } from "./usePatientBiochemicalForm";
 import { PatientGeneralForm } from "./usePatientGeneralForm";
 import {
   FormSteps,
   PatientAnalysisAction,
   PatientAnalysisContext,
+  PatientExtraDataKeys,
 } from "../types/PatientAnalysis";
 import { PatientAnalysisService } from "@/modules/patient_analysis/services";
 
@@ -13,14 +14,21 @@ const initialState: PatientAnalysisContext = {
   forms: {
     general: undefined,
     biochemical: undefined,
+    extra: {
+      heartProblemsRecently: false,
+      shareData: false,
+    },
   },
   currentStep: "general",
   canFetchPdf: false,
   pdfUrl: undefined,
   pdfBytes: undefined,
+  isModalOpen: false,
+  setIsModalOpen: () => {},
   setStep: () => {},
   setGeneralForm: () => {},
   setBiochemicalForm: () => {},
+  setExtraDataForm: () => {},
   getAnalysisPdf: () => {},
 };
 
@@ -38,6 +46,17 @@ const reducer = (
         ...state,
         forms: { ...state.forms, biochemical: action.payload },
       };
+    case "form/setExtraDataForm":
+      return {
+        ...state,
+        forms: {
+          ...state.forms,
+          extra: {
+            ...state.forms.extra,
+            [action.payload.key]: action.payload.value,
+          },
+        },
+      };
     case "pdf/setCanFetchPdf":
       return { ...state, canFetchPdf: action.payload };
     case "pdf/setPdfUrl":
@@ -53,6 +72,7 @@ const reducer = (
 
 export const usePatientAnalysis = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const setGeneralForm = (form: PatientGeneralForm) => {
     dispatch({ type: "form/setGeneralForm", payload: form });
@@ -62,20 +82,22 @@ export const usePatientAnalysis = () => {
     dispatch({ type: "form/setBiochemicalForm", payload: form });
   };
 
+  const setExtraDataForm = (key: PatientExtraDataKeys, value: boolean) => {
+    dispatch({ type: "form/setExtraDataForm", payload: { key, value } });
+  };
+
   const setStep = (step: FormSteps) => {
     dispatch({ type: "step/setStep", payload: step });
   };
 
   const getAnalysisPdf = async () => {
-    const { general, biochemical } = state.forms;
+    const { general, biochemical, extra } = state.forms;
     if (!general || !biochemical) return;
-
-    console.log(biochemical);
 
     dispatch({ type: "loading", payload: true });
 
     try {
-      const payload = { ...general, ...biochemical };
+      const payload = { ...general, ...biochemical, ...extra };
       const { data } = await PatientAnalysisService.getAnalysisPdf(payload);
 
       dispatch({ type: "pdf/setPdfBytes", payload: data.pdf });
@@ -97,9 +119,12 @@ export const usePatientAnalysis = () => {
 
   return {
     ...state,
+    isModalOpen,
+    setIsModalOpen,
     setStep,
     setGeneralForm,
     setBiochemicalForm,
+    setExtraDataForm,
     getAnalysisPdf,
   };
 };

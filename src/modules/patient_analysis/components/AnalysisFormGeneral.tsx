@@ -1,24 +1,32 @@
 import Input from "@/shared/components/Input";
 import NumberInput from "@/shared/components/NumberInput";
-import BooleanSelect from "@/shared/components/BooleanSelect";
 import { usePatientGeneralForm } from "../hooks/usePatientGeneralForm";
 import { usePatientAnalysisContext } from "../hooks/usePatientAnalysisContext";
 import AnalysisFormStepper from "./AnalysisFormStepper";
 import { motion } from "framer-motion";
+import BooleanRadio from "@/shared/components/BooleanRadio";
+import InlineInput from "@/shared/components/InlineInput";
 
 export default function AnalysisFormGeneral() {
   const {
     register,
-    formState: { errors },
     handleSubmit,
+    formState: { errors },
+    getValues,
+    control,
   } = usePatientGeneralForm();
 
   const { setGeneralForm, setStep } = usePatientAnalysisContext();
 
-  const onHandleSubmit = handleSubmit((data) => {
-    setGeneralForm(data);
-    setStep("biochemical");
-  });
+  const onHandleSubmit = handleSubmit(
+    (data) => {
+      setGeneralForm(data);
+      setStep("biochemical");
+    },
+    () => {
+      console.log(getValues());
+    }
+  );
 
   return (
     <motion.div
@@ -40,24 +48,27 @@ export default function AnalysisFormGeneral() {
         </select>
       </Input>
 
-      <Input label="¿Es fumador?" error={errors.smoking?.message}>
-        <BooleanSelect {...register("smoking")} />
-      </Input>
+      <InlineInput label="¿Es fumador?" error={errors.smoking?.message}>
+        <BooleanRadio control={control} name="smoking" />
+      </InlineInput>
 
-      <Input label="¿Padece de anemia?" error={errors.anaemia?.message}>
-        <BooleanSelect {...register("anaemia")} />
-      </Input>
+      <InlineInput label="¿Padece de anemia?" error={errors.anaemia?.message}>
+        <BooleanRadio control={control} name="anaemia" />
+      </InlineInput>
 
-      <Input label="¿Padece de diabetes?" error={errors.diabetes?.message}>
-        <BooleanSelect {...register("diabetes")} />
-      </Input>
+      <InlineInput
+        label="¿Padece de diabetes?"
+        error={errors.diabetes?.message}
+      >
+        <BooleanRadio control={control} name="diabetes" />
+      </InlineInput>
 
-      <Input
+      <InlineInput
         label="¿Padece de hipertensión arterial?"
         error={errors.highBloodPressure?.message}
       >
-        <BooleanSelect {...register("highBloodPressure")} />
-      </Input>
+        <BooleanRadio control={control} name="highBloodPressure" />
+      </InlineInput>
 
       <AnalysisFormStepper onNext={onHandleSubmit} />
     </motion.div>
