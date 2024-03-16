@@ -1,15 +1,17 @@
 import { Outlet } from "react-router-dom";
+import Header from "../shared/components/Header";
+import Footer from "@/shared/components/Footer";
 
 export default function RootLayout() {
   return (
-    <div className="flex flex-col min-h-[100svh]">
-      <h1>Header component</h1>
+    <div className="flex flex-col min-h-[100svh] px-4 ">
+      <Header />
 
-      <main className="flex-1 my-8 px-4">
+      <main className="flex-1 my-8">
         <Outlet />
       </main>
 
-      <h1>Footer component</h1>
+      <Footer />
     </div>
   );
 }
