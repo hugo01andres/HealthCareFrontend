@@ -1,9 +1,13 @@
 import Input from "@/shared/components/Input";
 import NumberInput from "@/shared/components/NumberInput";
-import { usePatientBiochemicalForm } from "../hooks/usePatientBiochemicalForm";
+import {
+  PatientBiochemicalForm,
+  usePatientBiochemicalForm,
+} from "../hooks/usePatientBiochemicalForm";
 import { usePatientAnalysisContext } from "../hooks/usePatientAnalysisContext";
 import AnalysisFormStepper from "./AnalysisFormStepper";
 import { motion } from "framer-motion";
+import { useCallback } from "react";
 
 export default function AnalysisFormBiochemical() {
   const {
@@ -12,11 +16,16 @@ export default function AnalysisFormBiochemical() {
     handleSubmit,
   } = usePatientBiochemicalForm();
 
-  const { setBiochemicalForm, setStep } = usePatientAnalysisContext();
+  const { setBiochemicalForm, setStep, setIsModalOpen } =
+    usePatientAnalysisContext();
 
-  const onHandleSubmit = handleSubmit((data) => {
-    setBiochemicalForm(data);
-  });
+  const onHandleSubmit = useCallback(
+    (data: PatientBiochemicalForm) => {
+      setBiochemicalForm(data);
+      setIsModalOpen(true);
+    },
+    [setBiochemicalForm, setIsModalOpen]
+  );
 
   return (
     <motion.div
@@ -70,7 +79,7 @@ export default function AnalysisFormBiochemical() {
 
       <AnalysisFormStepper
         onPrevious={() => setStep("general")}
-        onNext={onHandleSubmit}
+        onNext={handleSubmit(onHandleSubmit)}
       />
     </motion.div>
   );

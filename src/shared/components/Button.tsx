@@ -18,7 +18,7 @@ export default function Button({
     <button
       {...props}
       className={cn(
-        "bg-blue-500 flex items-center gap-2 justify-center text-white px-4 py-2 rounded-md",
+        "bg-blue-500 flex items-center gap-2 justify-center text-white px-4 py-2 rounded-md hover:opacity-70 transition-opacity ease-in-out duration-300",
         className,
         {
           "cursor-not-allowed": disabled,
