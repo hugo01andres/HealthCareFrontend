@@ -1,12 +1,13 @@
 import "./index.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { ReactQueryProvider, ReactRouterProvider } from "./plugins/";
+import { ReactQueryProvider } from "./plugins/";
+import App from "./App";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <ReactQueryProvider>
-      <ReactRouterProvider />
+      <App />
     </ReactQueryProvider>
   </React.StrictMode>
 );

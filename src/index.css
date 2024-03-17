@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  font-family: "Nunito Sans", sans-serif;
+}
+
 .loading-spinner {
   width: 1.2rem;
   height: 1.2rem;

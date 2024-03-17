@@ -1,24 +1,27 @@
 import HeartSafeLogo from "./HeartSafeLogo";
-import { Link } from "react-router-dom";
+import NavbarLink from "./NavbarLink";
 
 export default function Header() {
   return (
-    <header className="container mx-auto py-6 border-b border-gray-400 flex justify-between gap-4">
-      <figure className="inline-flex items-center gap-2">
-        <h1 className="text-3xl font-medium">HeartSafe</h1>
-        <HeartSafeLogo className="w-12 h-12" />
-      </figure>
+    <header className="border-b border-gray-400">
+      <div className="container mx-auto py-4 sm:py-6 flex items-center flex-wrap sm:justify-between gap-2 justify-center">
+        <HeartSafeLogo />
 
-      <nav>
-        <ul className="flex gap-4 mt-4">
-          <li>
-            <Link to="/">Inicio</Link>
-          </li>
-          <li>
-            <Link to="/patient-analysis">Obtener análisis</Link>
-          </li>
-        </ul>
-      </nav>
+        <nav>
+          <ul className="flex gap-4 items-center">
+            <li>
+              <NavbarLink className="border-gray-600" to="/">
+                Inicio
+              </NavbarLink>
+            </li>
+            <li>
+              <NavbarLink className="border-gray-600" to="/patient-analysis">
+                Obtener análisis
+              </NavbarLink>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </header>
   );
 }
