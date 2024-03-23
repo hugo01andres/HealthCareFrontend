@@ -5,6 +5,7 @@ import {
 import { usePatientAnalysisContext } from "@/modules/patient_analysis/hooks/usePatientAnalysisContext";
 import { motion } from "framer-motion";
 import AnalysisSubmissionModal from "./AnalysisSubmissionModal";
+import LoadingOverlay from "@/shared/components/LoadingOverlay";
 
 export default function AnalysisForm() {
   const { loading, currentStep } = usePatientAnalysisContext();
@@ -34,6 +35,8 @@ export default function AnalysisForm() {
       </div>
 
       <AnalysisSubmissionModal />
+
+      <LoadingOverlay isLoading={loading} />
     </motion.div>
   );
 }

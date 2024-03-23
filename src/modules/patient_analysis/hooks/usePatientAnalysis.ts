@@ -1,13 +1,15 @@
 import { useEffect, useReducer, useState } from "react";
-import { PatientBiochemicalForm } from "./usePatientBiochemicalForm";
-import { PatientGeneralForm } from "./usePatientGeneralForm";
 import {
   FormSteps,
   PatientAnalysisAction,
   PatientAnalysisContext,
   PatientExtraDataKeys,
 } from "../types/PatientAnalysis";
+import { PatientBiochemicalForm } from "./usePatientBiochemicalForm";
+import { PatientGeneralForm } from "./usePatientGeneralForm";
 import { PatientAnalysisService } from "@/modules/patient_analysis/services";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const initialState: PatientAnalysisContext = {
   loading: false,
@@ -15,21 +17,21 @@ const initialState: PatientAnalysisContext = {
     general: undefined,
     biochemical: undefined,
     extra: {
-      heartProblemsRecently: false,
+      deathEvent: false,
       shareData: false,
+      submitOnly: false,
     },
   },
   currentStep: "general",
   canFetchPdf: false,
-  pdfUrl: undefined,
-  pdfBytes: undefined,
   isModalOpen: false,
   setIsModalOpen: () => {},
   setStep: () => {},
   setGeneralForm: () => {},
   setBiochemicalForm: () => {},
   setExtraDataForm: () => {},
-  getAnalysisPdf: () => {},
+  getAnalysisPdf: async () => {},
+  submitPatientInformation: async () => {},
 };
 
 const reducer = (
@@ -59,10 +61,6 @@ const reducer = (
       };
     case "pdf/setCanFetchPdf":
       return { ...state, canFetchPdf: action.payload };
-    case "pdf/setPdfUrl":
-      return { ...state, pdfUrl: action.payload };
-    case "pdf/setPdfBytes":
-      return { ...state, pdfBytes: action.payload };
     case "step/setStep":
       return { ...state, currentStep: action.payload };
     default:
@@ -71,8 +69,9 @@ const reducer = (
 };
 
 export const usePatientAnalysis = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const navigate = useNavigate();
 
   const setGeneralForm = (form: PatientGeneralForm) => {
     dispatch({ type: "form/setGeneralForm", payload: form });
@@ -98,9 +97,36 @@ export const usePatientAnalysis = () => {
 
     try {
       const payload = { ...general, ...biochemical, ...extra };
+      delete payload.submitOnly;
+
       const { data } = await PatientAnalysisService.getAnalysisPdf(payload);
 
-      dispatch({ type: "pdf/setPdfBytes", payload: data.pdf });
+      navigate("/patient-analysis/results", {
+        state: {
+          pdfBytes: data.pdf,
+        },
+      });
+    } catch (err) {
+      console.log(err);
+    } finally {
+      dispatch({ type: "loading", payload: false });
+    }
+  };
+
+  const submitPatientInformation = async () => {
+    const { general, biochemical, extra } = state.forms;
+    if (!general || !biochemical) return;
+
+    dispatch({ type: "loading", payload: true });
+
+    try {
+      const payload = { ...general, ...biochemical, ...extra };
+      delete payload.submitOnly;
+
+      await PatientAnalysisService.submitPatientInformation(payload);
+
+      toast.success("Patient information submitted successfully");
+      navigate("/patient-analysis");
     } catch (err) {
       console.log(err);
     } finally {
@@ -126,5 +152,6 @@ export const usePatientAnalysis = () => {
     setBiochemicalForm,
     setExtraDataForm,
     getAnalysisPdf,
+    submitPatientInformation,
   };
 };

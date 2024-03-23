@@ -1,6 +1,7 @@
 import { cn } from "../utilities/cn";
 import stethoscopeIcon from "@assets/imgs/stethoscope.png";
 import { motion, Variants, MotionConfigProps } from "framer-motion";
+import { Link } from "react-router-dom";
 
 export type HeartSafeLogoProps = {
   className?: string;
@@ -38,7 +39,7 @@ const motionConfig: MotionConfigProps = {
 
 export default function HeartSafeLogo({ className }: HeartSafeLogoProps) {
   return (
-    <figure className="inline-flex items-center gap-2">
+    <Link to="/" className="inline-flex items-center gap-2">
       <motion.h1
         className="text-3xl font-bold"
         variants={variants.title}
@@ -58,6 +59,6 @@ export default function HeartSafeLogo({ className }: HeartSafeLogoProps) {
         animate="visible"
         {...motionConfig}
       />
-    </figure>
+    </Link>
   );
 }

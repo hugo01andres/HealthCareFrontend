@@ -1,9 +1,11 @@
 import { usePdfConvert } from "@/shared/hooks/usePdfConverter";
-import { usePatientAnalysisContext } from "../hooks/usePatientAnalysisContext";
 import Button from "@/shared/components/Button";
 
-export default function AnalysisResults() {
-  const { pdfBytes, loading } = usePatientAnalysisContext();
+type AnalysisResultsProps = {
+  pdfBytes: string | undefined;
+};
+
+export default function AnalysisResults({ pdfBytes }: AnalysisResultsProps) {
   const pdfUrl = usePdfConvert(pdfBytes);
 
   function viewAnalysisPdf() {
@@ -24,18 +26,17 @@ export default function AnalysisResults() {
   }
 
   return (
-    pdfUrl &&
-    !loading && (
-      <div className="flex items-center justify-center gap-4 w-full max-w-lg p-4 mx-auto">
+    pdfUrl && (
+      <div className="flex items-center justify-center gap-4 w-full max-w-lg mx-auto">
         <Button
-          className="w-full bg-blue-300 text-blue-900 border-2 border-blue-800"
+          className="w-full text-black border-2 border-black bg-gray-200"
           onClick={viewAnalysisPdf}
         >
           Ver PDF
         </Button>
 
         <Button
-          className="w-full bg-blue-300 text-blue-900 border-2 border-blue-800"
+          className="w-full text-black border-2 border-black bg-gray-200"
           onClick={downloadAnalysisPdf}
         >
           Descargar PDF

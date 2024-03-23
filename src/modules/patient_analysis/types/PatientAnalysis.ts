@@ -4,8 +4,9 @@ import { PatientGeneralForm } from "../hooks/usePatientGeneralForm";
 export type FormSteps = "general" | "biochemical";
 
 export type PatientExtraDataForm = {
-  heartProblemsRecently: boolean;
   shareData: boolean;
+  deathEvent: boolean;
+  submitOnly?: boolean;
 };
 
 export type PatientExtraDataKeys = keyof PatientExtraDataForm;
@@ -17,8 +18,6 @@ export type PatientAnalysisContext = {
     biochemical: PatientBiochemicalForm | undefined;
     extra: PatientExtraDataForm;
   };
-  pdfUrl: string | undefined;
-  pdfBytes: string | undefined;
   currentStep: FormSteps;
   canFetchPdf: boolean;
   isModalOpen: boolean;
@@ -27,7 +26,8 @@ export type PatientAnalysisContext = {
   setGeneralForm: (form: PatientGeneralForm) => void;
   setBiochemicalForm: (form: PatientBiochemicalForm | undefined) => void;
   setExtraDataForm: (key: PatientExtraDataKeys, value: boolean) => void;
-  getAnalysisPdf: () => void;
+  getAnalysisPdf: () => Promise<void>;
+  submitPatientInformation: () => Promise<void>;
 };
 
 export type LoadingAction = { type: "loading"; payload: boolean };
