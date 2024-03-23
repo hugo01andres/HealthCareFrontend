@@ -3,12 +3,13 @@ import Modal from "@/shared/components/Modal";
 import { useEffect } from "react";
 import InlineInput from "@/shared/components/InlineInput";
 import Button from "@/shared/components/Button";
-import { usePatientAnalysisContext } from "../hooks/usePatientAnalysisContext";
+import { usePatientAnalysisContext } from "@/modules/patient_analysis/hooks/usePatientAnalysisContext";
 
 export default function AnalysisSubmissionModal() {
   const {
     setExtraDataForm,
     getAnalysisPdf,
+    submitPatientInformation,
     canFetchPdf,
     isModalOpen,
     setIsModalOpen,
@@ -16,8 +17,14 @@ export default function AnalysisSubmissionModal() {
   } = usePatientAnalysisContext();
 
   function handleSubmit() {
-    if (!canFetchPdf) return;
-    getAnalysisPdf();
+    const { shareData, submitOnly } = extraDataForm;
+
+    if (shareData && submitOnly) {
+      submitPatientInformation();
+    } else {
+      if (!canFetchPdf) return;
+      getAnalysisPdf();
+    }
     setIsModalOpen(false);
   }
 
@@ -35,23 +42,33 @@ export default function AnalysisSubmissionModal() {
         </p>
 
         <InlineInput
-          label="¿Ha sufrido de problemas del corazón en los últimos 6 meses?"
+          label="¿El paciente que se está registrando ha fallecido? Si es el caso, ¿fue por un problema del corazón?"
           labelClass="flex-row gap-4"
         >
           <CheckboxInput
-            checked={extraDataForm.heartProblemsRecently}
-            onChange={(e) =>
-              setExtraDataForm("heartProblemsRecently", e.target.checked)
-            }
+            checked={extraDataForm.deathEvent}
+            onChange={(e) => setExtraDataForm("deathEvent", e.target.checked)}
           />
         </InlineInput>
 
-        <InlineInput label="¿Desea compartir sus datos para ayudar a otras personas?">
+        <InlineInput label="¿Acepta compartir los datos del paciente para ayudar a otras personas?">
           <CheckboxInput
             checked={extraDataForm.shareData}
             onChange={(e) => setExtraDataForm("shareData", e.target.checked)}
           />
         </InlineInput>
+
+        {extraDataForm.shareData && (
+          <InlineInput
+            label="¿Desea sólamente publicar los datos del paciente y no recibir el análisis?"
+            labelClass="font-semibold"
+          >
+            <CheckboxInput
+              checked={extraDataForm.submitOnly}
+              onChange={(e) => setExtraDataForm("submitOnly", e.target.checked)}
+            />
+          </InlineInput>
+        )}
 
         <nav className="flex justify-between gap-4">
           <Button

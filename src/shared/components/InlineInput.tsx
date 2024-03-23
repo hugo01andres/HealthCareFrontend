@@ -1,4 +1,5 @@
 import Input, { InputProps } from "./Input";
+import { cn } from "../utilities/cn";
 
 type InlineInputProps = InputProps & {
   label: string;
@@ -17,7 +18,10 @@ export default function InlineInput({
       {...rest}
       label={label}
       error={error}
-      labelClass="flex-row justify-between items-center gap-4 border-b border-gray-200 pb-2"
+      labelClass={cn(
+        "flex-row justify-between items-center gap-4 border-b border-gray-200 pb-2",
+        rest.labelClass
+      )}
     >
       {children}
     </Input>
